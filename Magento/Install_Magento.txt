@@ -1,0 +1,73 @@
+sudo apt-get install nginx -y
+
+apt-get install mysql-server -y
+
+sudo add-apt-repository ppa:ondrej/php
+
+sudo apt-get update
+-----------------------------------INSTALL php7.1-------------------------------------------------------------
+sudo apt-get install php7.1 php7.1-cli php7.1-common php7.1-json php7.1-opcache php7.1-mysql php7.1-curl -y
+sudo apt-get install php7.1-mcrypt php7.1-zip php7.1-fpm php7.1-mbstring php7.1-dom php7.1-intl php7.1-gd -y
+sudo apt-get install php7.1-bcmath php7.1-soap -y
+
+#sudo update-alternatives --set php /usr/bin/php7.1
+
+-----------------------------------INSTALL php7.2-------------------------------------------------------------
+sudo apt-get install php7.2 php7.2-json php7.2-opcache php7.2-mysql php7.2-curl -y
+sudo apt-get install php7.2-zip php7.2-fpm php7.2-mbstring php7.2-dom php7.2-intl php7.2-gd -y
+sudo apt-get install php7.2-bcmath php7.2-soap -y
+
+
+-----------------------------------CREATE NEW mysql user-------------------------------------------------------------
+sudo mysql
+CREATE USER 'magento'@'localhost' IDENTIFIED BY 'magento123';
+GRANT ALL PRIVILEGES ON * . * TO 'magento'@'localhost';
+FLUSH PRIVILEGES;
+
+-----------------------------------CREATE NEW ubuntu user-------------------------------------------------------------
+adduser magento
+pass: ohmyprimus1234
+-----------------------------------CHANGE Nginx & PHP configuration-------------------------------------------------------------
+nano /etc/nginx/nginx.conf
+change "user www-data;" to "user magento;"
+------------
+nano /etc/php/7.2/fpm/pool.d/www.conf 
+change some infformation to 
+user = magento
+group = magento
+listen.owner = magento
+listen.group = magento
+
+open file /etc/nginx/sites-available/default
+add 
+upstream fastcgi_backend {
+        server  unix:/var/run/php/php7.2-fpm.sock;
+}
+....
+        set $MAGE_ROOT /var/www/html/;
+        include /var/www/html/nginx.conf.sample;
+        
+--------
+sudo chown -R magento:magento /var/run/php/
+-----------------------------------UPLOAD CODE & SETUP SITE-------------------------------------------------------------
+create folder 
+mkdir /var/www/_magento_source/
+mkdir /var/www/_magento_source/m2
+upload code to /var/www/_magento_source/m2
+Giai nen 
+unzip -qq Magento-CE-2.3.1_sample_data-2019-03-18-06-46-56.zip -d mage_ce_231
+
+-----------------------------------CREATE NEW DATABASE-------------------------------------------------------------
+mysql -umagento -p
+CREATE DATABASE magento231;
+
+-----------------------------------BUILD MAGENTO SITE--NON-HTTPS---------------------------------------------------
+php bin/magento setup:install --base-url="http://10.16.30.84/" --db-host="localhost" --db-name="magento231" --db-user="magento" --db-password="magento123" --admin-firstname="admin" --admin-lastname="admin" --admin-email="admin@localhost.com" --admin-user="admin" --admin-password="admin123" --language="en_US" --currency="USD" --timezone="America/Chicago" --use-rewrites="1" --backend-frontname="admin"
+
+-----------------------------------BUILD MAGENTO SITE---HTTPS-----------------------------------------------------
+php bin/magento setup:install --base-url="https://magentodemo.hello.com.vn/" --db-host="localhost" --db-name="magento23104" --db-user="magento" --db-password="magento123" --admin-firstname="admin" --admin-lastname="admin" --admin-email="admin@localhost.com" --admin-user="admin" --admin-password="admin123" --language="en_US" --currency="USD" --timezone="America/Chicago" --use-rewrites="1" --backend-frontname="admin" --use-secure="1" --base-url-secure="https://magentodemo.hello.com.vn/" --use-secure-admin="1"
+
+-----------------------------------CREATE NEW MAGENTO ADMIN-----------------------------------------------------
+php bin/magento admin:user:create --admin-user='magnus' --admin-password='magnus123' --admin-email='magnus-admin@localhost.com' --admin-firstname='Magnus' --admin-lastname='Zuong'
+-----------------------------------CHANGE MAGENTO ADMIN PASSWORD-----------------------------------------------------
+php bin/magento admin:user:create --admin-user='admin' --admin-password='admin123' --admin-email='admin@localhost.com' --admin-firstname='Magnus' --admin-lastname='Zuong'

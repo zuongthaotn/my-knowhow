@@ -1,0 +1,11 @@
+upstream fastcgi_backend {
+	server	unix:/var/run/php/php7.1-fpm.sock;
+}
+upstream fastcgi_backend70 {
+    server   unix:/var/run/php/php7.0-fpm.sock;
+}
+server {
+	location /pmin {
+		index index.php;
+    }
+}

@@ -1,0 +1,14 @@
+Under the folder /etc/init.d/ you will find all the init scripts for different boot up services, like apache2, networking, etc.
+
+Depending on which runlevel the computer starts in, different services are started. So from the /etc/init.d/ folder each "service" is linked to one/many/no run level folders named from rc0.d to rc6.d.
+
+To keep things simple there is a tool for removing/adding these links, hence removing or adding scripts to and from start up.
+
+To disable apache2 simply type:
+
+sudo update-rc.d apache2 disable
+This disables apache2 at startup but is not removed so it can be enabled again. To remove the apache2 startup scripts do the following:
+
+To remove apache2 simply type:
+
+sudo update-rc.d -f  apache2 remove

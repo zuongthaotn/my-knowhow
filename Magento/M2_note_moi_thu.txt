@@ -1,0 +1,363 @@
+﻿
+ SQLSTATE[HY000]: General error: 1826 Duplicate foreign key constraint name
+ bin/magento setup:db-declaration:generate-whitelist
+ ----if got error----
+ php bin/magento setup:db-declaration:generate-whitelist
+Notice: Undefined index: referenceTable in /vendor/magento/module-developer/Model/Setup/Declaration/Schema/WhitelistGenerator.php on line 208
+---then fix by-----
+not solution yet
+ -------------------------------------------------------------------------------
+ Error : composer update 
+ The following exception is caused by a lack of memory or swap, or not having swap configured
+...
+[ErrorException]                                   
+  proc_open(): fork failed - Cannot allocate memory 
+ -----------------
+ Enable swap ubuntu
+ https://tecadmin.net/enable-swap-on-ubuntu/
+ then run
+ COMPOSER_MEMORY_LIMIT=-1 composer update
+
+-------------------------------------------------------------------------------
+
+ Fix bug
+ PHP Fatal error:  Uncaught Error: Undefined class constant 'PRE_COMMAND_RUN' in /var/www/html/ce-235p1s.local/vendor/laminas/laminas-dependency-plugin/src/DependencyRewriterPlugin.php:63
+ 
+cd ~/Downloads
+sudo apt-get install curl
+sudo curl -s https://getcomposer.org/installer | php
+which composer
+sudo mv composer.phar /usr/bin/composer
+  -----------------------------------CREATE NEW MAGENTO ADMIN-----------------------------------------------------
+php bin/magento admin:user:create --admin-user='magnus' --admin-password='magnus123' --admin-email='magnus-admin@localhost.com' --admin-firstname='Magnus' --admin-lastname='Zuong'
+-----------------------------------CHANGE MAGENTO ADMIN PASSWORD-----------------------------------------------------
+php bin/magento admin:user:create --admin-user='admin' --admin-password='admin123' --admin-email='admin@localhost.com' --admin-firstname='Magnus' --admin-lastname='Zuong'
+
+  --------------------------------------------------------------------------------------------------------------------------------
+ mysql.service service hold-off time over scheduling restart
+ 
+ Chạy lệnh mysqld --help --verbose
+ sẽ thấy đoạn đầu có đoạn 
+ mysqld: Can't change dir to '/var/lib/mysql/' (Errcode: 13 - Permission denied)
+mysqld  Ver 5.7.27-0ubuntu0.18.04.1 for Linux on x86_64 ((Ubuntu))
+=> sudo chown zuongthao:zuongthao /var/lib/mysql/ la duoc
+hoac sudo chown mysql:mysql /var/lib/mysql/
+------------
+Neu van khong duoc thi lam tiep
+sudo chown mysql:mysql /var/lib/mysql/
+sudo chown mysql:mysql /var/lib/mysql-files/
+sudo chown mysql:mysql /var/lib/mysql-upgrade/
+sudo chown mysql:mysql /var/lib/mysql-keyring/
+-----------------
+Neu van khong duoc thi lam tiep
+mysqld_safe --defaults-file=/etc/my.cf
+Neu thay loi file permision thi 
+sudo mkdir -p /var/run/mysqld
+sudo chown mysql:mysql /var/run/mysqld
+sudo chmod -R 777 /var/log/
+sudo service mysql start
+ --------------------------------------------------------------------------------------------------------------------------------
+Command returned non-zero exit code:
+`/usr/bin/php7.2 -f /var/www/html/bin/magento setup:di:compile`
+
+ 
+  --------------------------------------------------------------------------------------------------------------------------------
+ Unable to unserialize value. Error: Syntax error after upgrade magento
+ Sau khi upgrade magento 2.2 to 2.3 gặp lỗi này
+ 1. Check php version 
+ 2. Nếu php version chạy 2.2 và 2.3 giống nhau thì chỉ cần xóa var/log/* và generated/* s
+--------------------------------------------------------------------------------------------------------------------------------
+Enable Magento developer mode nhưng Developer tab trong phần Stores => Configuration => Advance vẫn ko hiển thị.
+Not Fixed :
+
+--------------------------------------------------------------------------------------------------------------------------------
+Deprecated Functionality: The each() function is deprecated.
+This message will be suppressed on further calls in /vendor/colinmollenhour/cache-backend-file/File.php on line 81
+Fix:
+Run php7.1 instead of php7.2
+--------------------------------------------------------------------------------------------------------------------------------
+General error: 1205 Lock wait timeout exceeded; try restarting transaction
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+Fix lỗi redirect https sau khi clone 1 website sử dụng SSL về local
+Run sql
+UPDATE core_config_data SET value=REPLACE(value, 'https', 'http') WHERE value LIKE 'https%';
+sau đó run sql
+UPDATE core_config_data SET value=0 
+WHERE path='web/secure/use_in_frontend' OR path='web/secure/use_in_adminhtml' OR path='web/url/redirect_to_base';
+
+--------------------------------------------------------------------------------------------------------------------------------
+Lỗi: Element 'group': Missing child element(s). Expected is ( job ).
+Khi chạy bin/magento cron:run
+Nguyên nhân: Có thể đang có 1 file xml nào đó mà chỉ có thẻ config mà ko có các thẻ con bên trong.
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+protected function log($message){
+	$writer = new \Zend\Log\Writer\Stream(BP . '/var/log/magnus.log');
+	$logger = new \Zend\Log\Logger();
+	$logger->addWriter($writer);
+	$logger->info($message);
+}
+--------------------------------------------------------------------------------------------------------------------------------
+This page isn’t working
+domain redirected you too many times
+http://fascinate_clone_working.adam.com/admin
+=>
+http://fascinate_clone_working.adam.com/admin/http:/index/fascinate_clone_working.adam.com/admin/admin/index/index/key/8d71f692bed0116df114b1ba8c7f120443af2780b1e6218de3b6029678f5b686/
+
+Khong su dung gach duoi _ cho domain dc, chuyen thanh - hoac bo di se dc.
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+Something went wrong while saving the customer.
+==> Run indexer
+--------------------------------------------------------------------------------------------------------------------------------
+php bin/magento maintenance:enable [--ip=<ip address> ... --ip=<ip address>] | [ip=none]
+php bin/magento maintenance:disable [--ip=<ip address> ... --ip=<ip address>] | [ip=none]
+php bin/magento maintenance:status
+--------------------------------------------------------------------------------------------------------------------------------
+Too many arguments, expected arguments "command"
+-
+Do loi command, cac param value phai dc dat trong nhau kep
+--------------------------------------------------------------------------------------------------------------------------------
+Cart Empty after adding product to cart /magento 2
+Solved:
+Go to back-end -> Stores -> Setting -> Configuration->Web->Base URLs
+to change localhost to 127.0.0.1 on Base Url.
+--------------------------------------------------------------------------------------------------------------------------------
+Reset magento admin password:
+UPDATE admin_user SET `password` = CONCAT(SHA2('xxxxxxxYourNewPassword', 256), ':xxxxxxx:1') WHERE username = 'admin';
+===> 
+UPDATE admin_user SET `password` = CONCAT(SHA2('123456789', 256), ':000586aed79895d64dd371a7bc883362:1') WHERE username = 'admin';
+---------------------------------------------------------------------------------------------------------------------------------
+Create new supper admin user
+php bin/magento admin:user:create --admin-user='magnus' --admin-password='magnus123' --admin-email='magnus@localhost.com' --admin-firstname='Magnus' --admin-lastname='Admin'
+---------------------------------------------------------------------------------------------------------------------------------
+
+The xxxxxxx character sequence is a cryptographic salt.
+it is saved in app\etc\env.php file
+
+<?php
+return array (
+  ...
+  'crypt' => 
+  array (
+    'key' => '000586aed79895d64dd371a7bc883362', //cryptographic salt
+  ),
+  ...
+
+--------------------------------------------------------------------------------------------------------------------------------
+Reset password admin(cach 2)
+Tao 1 account admin khac full quyen => doi pass cho account cu
+php bin/magento admin:user:create --admin-user=magnus --admin-password=magnus123 --admin-email=magnus@magestore.com --admin-firstname=admin --admin-lastname=admin
+--------------------------------------------------------------------------------------------------------------------------------
+Upgrade Magento 2 qua CLI
+
+composer require magento/product-community-edition 2.2.0 --no-update
+
+composer update
+	Public Key: ef491e367726257202b2d53b78300e71
+	Private Key: 49dde343cd408c1c2d56d757515a8ac4
+
+rm -rf var/di/* var/generation/* var/cache/* var/log/* var/page_cache/* var/session/* var/view_preprocessed/* pub/static/*
+
+chmod -R 777 var/ pub/ generated/
+
+php bin/magento setup:upgrade 
+php bin/magento setup:di:compile
+php bin/magento setup:static-content:deploy
+php bin/magento cache:clean
+php bin/magento cache:flush
+php bin/magento indexer:reindex
+--------------------------------------------------------------------------------------------------------------------------------
+php bin/magento deploy:mode:show
+php bin/magento deploy:mode:set developer
+--------------------------------------------------------------------------------------------------------------------------------
+Error: There are no commands defined in the "setup" namespace.
+Solution:
+check lai các modules, có vẻ module nào đó bị lỗi, đăc biệt là file module.xml
+--------------------------------------------------------------------------------------------------------------------------------
+Login customer not working:
+Đổi base_url trong core_config_data sang IP 127.0.0.1 thì lại work
+--------------------------------------------------------------------------------------------------------------------------------
+create cronjob
+http://devdocs.magento.com/guides/v2.0/config-guide/cli/config-cli-subcommands-cron.html#config-cli-cron-bkg
+##################################
+* * * * * /usr/bin/php /var/www/howtosolve.pro/public_html/bin/magento cron:run | grep -v "Ran jobs by schedule" >> /var/www/howtosolve.pro/public_html/var/log/magento.cron.log
+* * * * * /usr/bin/php /var/www/howtosolve.pro/public_html/update/cron.php >> /var/www/howtosolve.pro/public_html/var/log/update.cron.log
+* * * * * /usr/bin/php /var/www/howtosolve.pro/public_html/bin/magento setup:cron:run >> /var/www/howtosolve.pro/public_html/var/log/setup.cron.log
+--------------------------------------------------------------------------------------------------------------------------------
+/setup/index.php/navigation/side-menu 403 (Forbidden)
+/setup/index.php/navigation/header-bar 403 (Forbidden)
+/setup/index.php/navigation 403 (Forbidden)
+/setup/index.php/session/prolong 403 (Forbidden)
+
+++++++++++++++++++++++++
+Solved:
+
+Changed nginx.conf.sample /setup location block to:
+
+location /setup {
+    root $MAGE_ROOT;
+    location ~ ^/setup/index.php {
+
+        ### This fixes the problem:
+        fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+        ################################
+
+        fastcgi_pass   fastcgi_backend;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+
+    location ~ ^/setup/(?!pub/). {
+        deny all;
+    }
+
+    location ~ ^/setup/pub/ {
+        add_header X-Frame-Options "SAMEORIGIN";
+    }
+}
+--------------------------------------------------------------------------------------------------------------------------------
+reinstall magento 2 tu 1 folder magento 2 da dc cai dat tu trươc
+php bin/magento setup:uninstall
+php bin/magento module:enable --all
+php bin/magento setup:di:compile
+go truc tiep link http://localhost/magento2/setup/
+--------------------------------------------------------------------------------------------------------------------------------
+php bin/magento cache:clean
+php bin/magento cache:flush
+
+
+php bin/magento setup:static-content:deploy
+php bin/magento indexer:reindex
+
+
+sudo a2enmod rewrite
+sudo service apache2 restart
+
+#Install a extension/plugin
+php bin/magento setup:upgrade
+
+cac hàm định nghĩa trong requireJS(widget) thì tên ko đc bắt đầu bằng _
+trừ 1 số hàm đặc biệt, chẳng hạn _create
+--------------------------------------------------------------------------------------------------------------------------------
+		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+		$attributeCode = 'webpos_staff';
+		$model = $objectManager->create('Magento\Eav\Model\Config');
+		$attr = $model->getAttribute('customer', $attributeCode);
+		$customerCollection = $objectManager->create('Magento\Customer\Model\Customer')->getCollection();
+		$collection = $customerCollection
+			->addAttributeToFilter('entity_id',$customerId);
+		$collection->joinField('webpos_aff',
+        $attr->getBackendTable(),
+        'value',
+        'entity_id=entity_id',
+        "{{table}}.attribute_id='".$attr->getId()."'");
+			\Zend_Debug::dump($collection->getData());
+--------------------------------------------------------------------------------------------------------------------------------
+$eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
+            $eavSetup->addAttribute(
+			\Magento\Customer\Model\Customer::ENTITY,
+			'webpos_staff',
+			[
+                            'type' => 'int',
+                            'label' => 'Assigned to wePOS staff',
+                            'input' => 'select',
+                            'backend_model' => 'Magestore\Webpos\Model\Staff\Staff',
+                            'required' => true,
+                            'visible' => true,
+                            'user_defined' => true,
+                            'sort_order' => 1000,
+                            'position' => 1000,
+                            'system' => 0,
+			]
+		);
+
+thì class Magestore\Webpos\Model\Staff\Staff phải đc định nghĩa như sau
+class Staff extends \Magento\Framework\Model\AbstractModel implements \Magento\Framework\Data\OptionSourceInterface{}
+và phải có hàm getAllOptions()
+@return array Format: array(array('value' => '<value>', 'label' => '<label>'), ...)
+--------------------------------------------------------------------------------------------------------------------------------
+lỗi 
+Warning: array_values() expects parameter 1 to be array, object given in vendor\magento\module-ui\Component\Form\Element\AbstractOptionsField.php on line 54
+khi thêm 1 select box cho adminhtml form bằng ui-component
+ví dụ
+<fieldset name="customer">        
+        <field name="assign_to_webpos_staff">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magestore\Webpos\Model\Staff\Staff</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Assign to webPOS staff</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+thì class Magestore\Webpos\Model\Staff\Staff phải đc định nghĩa như sau
+class Staff extends \Magento\Framework\Model\AbstractModel implements \Magento\Framework\Data\OptionSourceInterface{}
+và phải có hàm toOptionArray()
+@return array Format: array(array('value' => '<value>', 'label' => '<label>'), ...)
+
+--------------------------------------------------------------------------------------------------------------------------------
+Để update 1 ui component có sẵn (chẳng hạn vendor\magento\module-customer\view\base\ui_component\customer_form.xml) thì chỉ cần tạo 1 file với tên giống y hệt trong module của mình, sau đó thêm các trường cần thiết().
+------------------------------------------------------------------------------------------------------
+remove version in css, js, ...
+Chẳng hạn
+http://localhost/mage_2.1.6/pub/static/version1493956872/frontend/Magento/luma/en_US/css/styles-m.css
+Cách solve:
+INSERT INTO `core_config_data` (`scope`, `scope_id`, `path`, `value`) VALUES ('default', 0, 'dev/static/sign', '0');
+php magento cache:flush
+------------------------------------------------------------------------------------------------
+http://devdocs.magento.com/guides/v2.1/config-guide/cli/config-cli-subcommands-static-view.html
+http://devdocs.magento.com/guides/v2.1/config-guide/cli/config-cli.html
+
+http://inchoo.net/magento/api-magento/magento-2-custom-api/
+http://inchoo.net/magento-2/magento-2-api/
+
+-----------------------------------------------------------------------------------------------
+
+apt-get install php-common 
+apt-get install php-curl 
+apt-get install php-gd
+apt-get install php-mcrypt
+apt-get install php-intl
+apt-get install php-mbstring
+apt-get install php-zip
+apt-get install php-soap
+
+apt-get install composer 
+apt-get install git
+
+chmod -R 777 /var/www/html/magnus/mage_ce_218_50426/var /var/www/html/magnus/mage_ce_218_50426/pub /var/www/html/magnus/mage_ce_218_50426/app/etc /var/www/html/magnus/mage_ce_218_50426/generated
+
+CREATE USER 'magento'@'localhost' IDENTIFIED BY 'magento123';
+GRANT ALL PRIVILEGES ON *.* TO 'magento'@'localhost' WITH GRANT OPTION;
+
+---------------------------------------------------------------------------------------------------
+Vi du: Install a M2 module via composer
+Magento 2 Profiler Module
+Installation
+
+Log in to the Magento server, go to your Magento install dir and run these commands:
+
+composer require mirasvit/module-profiler
+
+
+php -f bin/magento module:enable Mirasvit_Profiler
+php -f bin/magento setup:upgrade
+php -f bin/magento mirasvit:profiler:enable
+
+Usage
+
+php -f bin/magento mirasvit:profiler:enable # Enable profiler
+php -f bin/magento mirasvit:profiler:disable # Disable profiler
+php -f bin/magento mirasvit:profiler:status # Current status
+php -f bin/magento mirasvit:profiler:allow-ips 127.0.0.1 192.268.22.11 # Allow only specified IPs
+php -f bin/magento mirasvit:profiler:allow-ips --none # Remove IP restriction
+

@@ -1,0 +1,70 @@
+
+---------------------------------------------------------------------------------------------------
+sudo adduser username
+sudo usermod -aG sudo username
+
+sudo usermod -a -G groupName userName
+---------------------------------------------------------------------------------------------------
+cd /home;
+sudo mkdir peter
+sudo chown peter:peter peter
+sudo usermod -d /home/peter peter
+---------------------------------------------------------------------------------------------------
+cp -a /var/www/html/magnus/mage_ee_225_cga /var/www/html/oliver
+---------------------------------------------------------------------------------------------------
+sudo mv /root/folder1 /home/folder2/
+---------------------------------------------------------------------------------------------------
+Nen thu muc
+zip -r app_code_23012019.zip /var/www/html/multistore/app/code/
+---------------------------------------------------------------------------------------------------
+Giai nen
+unzip -qq Magento-CE-2.1.8-2017-08-08-04-18-25.zip -d Magento-CE-2.1.8-2017-08-08-04-18-25
+unzip -qq Magento-CE-2.2.4_sample_data-2018-05-01-09-43-25.zip -d mage_ce_224
+unzip -qq Magento-CE-2.2.3_sample_data-2018-02-23-11-28-28.zip -d mage_ce_223
+---------------------------------------------------------------------------------------------------
+grep -inr "return gst_tax" app/code/Magestore/Webpos/
+grep -inr "player.phtml" /var/www/vhosts/newchoraltracks.com/app/design/frontend/Choraltracks
+ 
+find file
+find var/ -name webapi-5c247e2ecca36
+ 
+git init
+git remote add origin https://bitbucket.org/magestore/loki_owen_45008_ce2_pos_aff_tier_coupon/
+git pull origin master
+---------------------------------------------------------------------------------------------------
+find pub/ -type d -exec chmod 0755 {} \;
+find pub/ -type f -exec chmod 0644 {} \;
+
+---------------------------------------------------------------------------------------------------
+sudo apt-get --purge remove apache2
+---------------------------------------------------------------------------------------------------
+ip link set enp2s0 up
+
+# This file describes the network interfaces available on your system
+# For more information, see netplan(5).
+network:
+ version: 2
+ renderer: networkd
+ ethernets:
+   enp2s0:
+     dhcp4: no
+     dhcp6: no
+     addresses: [192.168.1.176/24]
+     gateway4: 192.168.1.1
+     nameservers:
+       addresses: [8.8.8.8,8.8.4.4]
+---------------------------------------------------------------------------------------------------
+ubuntu version
+lsb_release -a
+---------------------------------------------------------------------------------------------------
+Restart network(internet)
+sudo /etc/init.d/network-manager restart
+---------------------------------------------------------------------------------------------------
+Export database 
+mysqldump -umagento -p --single-transaction --skip-triggers magento1 > magento1.sql
+su dung single-transaction de tranh cac truong hop sau nay import bi thieu bang
+
+---------------------------------------------------------------------------------------------------
+How to fix external hard disk READ ONLY?
+sudo mount -o remount,uid=1000,gid=1000,rw /dev/sdc1
+
